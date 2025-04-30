@@ -1,0 +1,8 @@
+__pycache__/
+*.log
+.env
+.vscode/
+Dockerfile_*
+*.tar
+node_modules/
+docker-data/
