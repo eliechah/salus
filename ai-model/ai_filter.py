@@ -4,7 +4,7 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences # type: ignore
 import pickle
 
 # Load model and tokenizer once
-model = tf.keras.models.load_model("kdnn_model.h5")
+model = tf.keras.models.load_model("kdnn_model.keras")
 with open("tokenizer.pkl", "rb") as f:
     tokenizer = pickle.load(f)
 
