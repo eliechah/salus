@@ -1,0 +1,1 @@
+yara -r configs/yara_rules/*.yar path/to/your/code/
