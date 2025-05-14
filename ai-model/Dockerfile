@@ -1,15 +1,11 @@
-# ai-model/Dockerfile
-
 FROM python:3.10-slim
+
+WORKDIR /app
 
 # Install dependencies
 RUN pip install tensorflow scikit-learn
 
-# Create app directory
-WORKDIR /app
+# Copy code
+COPY ai_filter.py kdnn_model.keras tokenizer.pkl github_scan_handler.py /app/
 
-# Copy your model files
-COPY ai_filter.py kdnn_model.keras tokenizer.pkl /app/
-
-# Optional: set a test command for now
-CMD ["python3", "ai_filter.py"]
+CMD ["python3", "github_scan_handler.py"]

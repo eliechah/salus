@@ -4,17 +4,19 @@ services:
   ai_model:
     build:
       context: ./ai-model
-    container_name: ai_model
     volumes:
       - ./scanner:/app/scanner
-    command: python3 ai_filter.py
+    container_name: ai_model
+
 
   gitleaks:
     image: zricethezav/gitleaks
     container_name: gitleaks
     volumes:
       - ./scanner:/scan
-    command: detect --source=/scan --report-path=/scan/gitleaks.json
+      - ./configs/gitleaks.toml:/gitleaks.toml
+    command: detect --no-git --source=/scan --config=/gitleaks.toml --report-path=/scan/gitleaks.json
+
 
   yara:
     image: blacktop/yara
@@ -33,6 +35,7 @@ services:
       - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
     volumes:
       - sonar_data:/opt/sonarqube/data
+
 
 volumes:
   sonar_data:

@@ -1,0 +1,25 @@
+[
+ {
+  "RuleID": "aws-test",
+  "Description": "Test AWS Key Leak",
+  "StartLine": 1,
+  "EndLine": 1,
+  "StartColumn": 1,
+  "EndColumn": 45,
+  "Match": "AWS_SECRET_ACCESS_KEY = \"AKIA1234567890TESTKE",
+  "Secret": "AKIA1234567890TESTKE",
+  "File": "/scan/leaks.py",
+  "SymlinkFile": "",
+  "Commit": "",
+  "Entropy": 3.9219282,
+  "Author": "",
+  "Email": "",
+  "Date": "",
+  "Message": "",
+  "Tags": [
+   "key",
+   "AWS"
+  ],
+  "Fingerprint": "/scan/leaks.py:aws-test:1"
+ }
+]
