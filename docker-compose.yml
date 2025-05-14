@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  ai_model:
+    build:
+      context: ./ai-model
+    container_name: ai_model
+    volumes:
+      - ./scanner:/app/scanner
+    command: python3 ai_filter.py
+
+  gitleaks:
+    image: zricethezav/gitleaks
+    container_name: gitleaks
+    volumes:
+      - ./scanner:/scan
+    command: detect --source=/scan --report-path=/scan/gitleaks.json
+
+  yara:
+    image: blacktop/yara
+    container_name: yara
+    volumes:
+      - ./scanner:/scan
+      - ./configs/yara_rules:/rules
+    command: yara -r /rules/custom_rules.yar /scan
+
+  sonarqube:
+    image: sonarqube:community
+    container_name: sonarqube
+    ports:
+      - "9000:9000"
+    environment:
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+    volumes:
+      - sonar_data:/opt/sonarqube/data
+
+volumes:
+  sonar_data:
