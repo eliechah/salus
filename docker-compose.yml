@@ -4,9 +4,11 @@ services:
   ai_model:
     build:
       context: ./ai-model
+    container_name: ai_model
     volumes:
       - ./scanner:/app/scanner
-    container_name: ai_model
+      - ./configs/yara_rules:/rules   # ✅ Add this line
+
 
 
   gitleaks:
@@ -24,7 +26,8 @@ services:
     volumes:
       - ./scanner:/scan
       - ./configs/yara_rules:/rules
-    command: yara -r /rules/custom_rules.yar /scan
+    command: ["sh", "-c", "yara -r /rules/test_secrets.yar /scan"]
+
 
   sonarqube:
     image: sonarqube:community
