@@ -1,2 +1,0 @@
-# This file contains a fake AWS secret for testing.
-AWS_SECRET_ACCESS_KEY = "AKIA1234567890TESTKEY"
