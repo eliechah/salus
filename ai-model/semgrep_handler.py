@@ -2,7 +2,7 @@ import json
 import os
 from ai_filter import is_threat
 
-SEMGREP_REPORT = "scanner/semgrep.json"
+SEMGREP_REPORT = "scanner/semgrep-report.json"
 
 def load_semgrep_findings():
     if not os.path.exists(SEMGREP_REPORT):

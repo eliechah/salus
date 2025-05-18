@@ -2,7 +2,7 @@ import json
 import os
 from ai_filter import is_threat
 
-GITLEAKS_REPORT = "scanner/gitleaks.json"
+GITLEAKS_REPORT = "scanner/gitleaks-report.json"
 
 print("[*] Looking for:", GITLEAKS_REPORT)
 

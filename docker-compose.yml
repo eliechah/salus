@@ -15,7 +15,8 @@ services:
     volumes:
       - ./scanner:/scan
       - ./configs/gitleaks.toml:/gitleaks.toml
-    command: detect --no-git --source=/scan --config=/gitleaks.toml --report-path=/scan/gitleaks.json
+    command: detect --no-git --source=/scan --config=/gitleaks.toml --report-path=/scan/gitleaks-report.json
+
 
 
   yara:
@@ -32,5 +33,4 @@ services:
     volumes:
       - ./scanner:/scan
     working_dir: /scan
-    command: semgrep scan --config=p/security-audit --json --output=/scan/semgrep.json /scan
-
+    command: semgrep scan --config=p/security-audit --json --output=/scan/semgrep-report.json /scan
