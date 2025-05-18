@@ -27,18 +27,3 @@ services:
       - ./scanner:/scan
       - ./configs/yara_rules:/rules
     command: ["sh", "-c", "yara -r /rules/test_secrets.yar /scan"]
-
-
-  sonarqube:
-    image: sonarqube:community
-    container_name: sonarqube
-    ports:
-      - "9000:9000"
-    environment:
-      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
-    volumes:
-      - sonar_data:/opt/sonarqube/data
-
-
-volumes:
-  sonar_data:
