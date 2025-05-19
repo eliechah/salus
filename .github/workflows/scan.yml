@@ -26,7 +26,7 @@ jobs:
             yourusername/git-sec-scanner
 
       - name: Upload Scan Reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: scan-results
           path: outputs/
