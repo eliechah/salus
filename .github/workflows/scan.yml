@@ -23,7 +23,7 @@ jobs:
             -v ${{ github.workspace }}:/app/code \
             -v ${{ github.workspace }}/outputs:/app/outputs \
             -v ${{ github.workspace }}/configs:/app/configs \
-            yourusername/git-sec-scanner
+            eliechxh/git-salus-scanner
 
       - name: Upload Scan Reports
         uses: actions/upload-artifact@v4
