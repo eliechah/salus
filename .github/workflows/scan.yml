@@ -1,0 +1,32 @@
+name: Git Repo Security Scan
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Prepare output folder
+        run: mkdir outputs
+
+      - name: Run Git Security Tool (Gitleaks + Semgrep + YARA)
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/app/code \
+            -v ${{ github.workspace }}/outputs:/app/outputs \
+            -v ${{ github.workspace }}/configs:/app/configs \
+            yourusername/git-sec-scanner
+
+      - name: Upload Scan Reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: scan-results
+          path: outputs/

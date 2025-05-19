@@ -4,33 +4,7 @@ services:
       context: ./ai-model
     container_name: ai_model
     volumes:
-      - ./scanner:/app/scanner
-      - ./configs/yara_rules:/rules   # ✅ Add this line
-
-
-
-  gitleaks:
-    image: zricethezav/gitleaks
-    container_name: gitleaks
-    volumes:
-      - ./scanner:/scan
-      - ./configs/gitleaks.toml:/gitleaks.toml
-    command: detect --no-git --source=/scan --config=/gitleaks.toml --report-path=/scan/gitleaks-report.json
-
-
-
-  yara:
-    image: blacktop/yara
-    container_name: yara
-    volumes:
-      - ./scanner:/scan
-      - ./configs/yara_rules:/rules
-    command: ["sh", "-c", "yara -r /rules/test_secrets.yar /scan"]
-
-  semgrep:
-    image: returntocorp/semgrep
-    container_name: semgrep
-    volumes:
-      - ./scanner:/scan
-    working_dir: /scan
-    command: semgrep scan --config=p/security-audit --json --output=/scan/semgrep-report.json /scan
+      - ./target_repo:/app/code         # ✅ User's code to scan
+      - ./outputs:/app/outputs          # ✅ Reports directory
+      - ./configs:/app/configs          # ✅ YARA rules, Gitleaks config, etc.
+    tty: true                           # Optional: allows manual debugging

@@ -1,7 +1,11 @@
 # This file is intentionally vulnerable to test AI classification.
 
 # === GITLEAKS & YARA ===
-AWS_SECRET_ACCESS_KEY = "AKIA1234567890TESTKEY"  # Simulated leaked secret
+AWS_SECRET_ACCESS_KEY = "AKIA1234567890TESTKEY"
+eval("print('danger')")
+import subprocess
+subprocess.call("ls", shell=True)
+
 
 # === SEMGREP (Hardcoded credential + command injection) ===
 def login():
