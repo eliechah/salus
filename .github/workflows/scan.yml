@@ -1,4 +1,4 @@
-name: Git Repo Security Scan
+name: Salus Repo Security Scanner
 
 on:
   push:
