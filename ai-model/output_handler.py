@@ -28,24 +28,35 @@ def run_gitleaks():
 
 def handle_gitleaks():
     print("\n[🔍] Gitleaks Results:")
+    print(f"[DEBUG] Checking if Gitleaks report exists at {GITLEAKS_REPORT}: {os.path.exists(GITLEAKS_REPORT)}")
+
     if not os.path.exists(GITLEAKS_REPORT):
         print("[!] Gitleaks report not found.")
         return []
+
     with open(GITLEAKS_REPORT, "r") as f:
         try:
             findings = json.load(f)
+            print(f"[DEBUG] Raw Gitleaks JSON: {findings}")
+
             threats = []
             for item in findings:
                 code = item.get("Match", "").strip()
+                print(f"[DEBUG] Gitleaks finding Match field: {code}")
                 if code:
                     result = is_threat(code)
                     verdict = "THREAT ✅" if result else "False Positive ❌"
                     print(f"  → {verdict} — {code}")
                     threats.append((verdict, code))
+
+            if not threats:
+                print("  → No Gitleaks threats detected.")
             return threats
+
         except json.JSONDecodeError:
             print("[!] Invalid Gitleaks JSON.")
             return []
+
 
 # === YARA ===
 def handle_yara():
@@ -109,20 +120,22 @@ def run_semgrep():
 
 def handle_semgrep():
     print("\n[🔍] Semgrep Results:")
+    print(f"[DEBUG] Checking if Semgrep report exists at {SEMGREP_REPORT}: {os.path.exists(SEMGREP_REPORT)}")
+
     if not os.path.exists(SEMGREP_REPORT):
         print("[!] Semgrep report not found.")
         return []
 
-    # ✅ Known threat Semgrep rule IDs
     known_threats = {
         "python.lang.security.deserialization.pickle.avoid-pickle": True,
         "python.lang.security.audit.subprocess-shell-true.subprocess-shell-true": True,
-        # Add more Semgrep rule IDs here as needed
     }
 
     with open(SEMGREP_REPORT, "r") as f:
         try:
             data = json.load(f)
+            print("[DEBUG] Raw Semgrep JSON:", data)
+
             findings = data.get("results", [])
             threats = []
 
@@ -149,6 +162,7 @@ def handle_semgrep():
         except json.JSONDecodeError:
             print("[!] Invalid Semgrep JSON.")
             return []
+
         
 
 # === COMBINED RUN ===
