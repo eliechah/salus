@@ -23,6 +23,7 @@ jobs:
             -v ${{ github.workspace }}:/app/code \
             -v ${{ github.workspace }}/outputs:/app/outputs \
             -v ${{ github.workspace }}/configs:/app/configs \
+            -v ${{ github.workspace }}/configs/gitleaks.toml:/gitleaks.toml \
             eliechxh/git-salus-scanner
 
       - name: Upload Scan Reports
