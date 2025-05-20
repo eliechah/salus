@@ -135,10 +135,12 @@ def run_semgrep():
     cmd = [
         "semgrep", "scan",
         "--config=p/security-audit",
+        "--include", "*.py",
         "--json",
         "--output=/app/outputs/semgrep-report.json",
         "/app/code"
     ]
+
     result = run(cmd, capture_output=True, text=True)
     if result.returncode != 0:
         print(f"[!] Semgrep scan error:\n{result.stderr}")
