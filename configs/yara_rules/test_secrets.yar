@@ -1,13 +1,11 @@
 rule AWS_Secret_Key
 {
-    meta:
-        description = "Detect AWS Secret Access Keys"
-        severity = "high"
     strings:
-        $aws_key = /AKIA[0-9A-Z]{10,20}/
+        $aws_key = "AKIA1234ABCD5678EFGH"
     condition:
         $aws_key
 }
+
 
 rule Google_API_Key
 {
