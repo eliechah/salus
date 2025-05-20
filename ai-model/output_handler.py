@@ -129,7 +129,6 @@ def run_semgrep():
     cmd = [
         "semgrep", "scan",
         "--config=p/python",
-        "--no-git-ignore",
         "--json",
         "--output=/app/outputs/semgrep-report.json",
         "/app/code"
