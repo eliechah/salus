@@ -1,0 +1,6 @@
+rules:
+  - id: detect-subprocess-call
+    pattern: subprocess.call(...)
+    message: "Insecure subprocess call detected"
+    languages: [python]
+    severity: WARNING
