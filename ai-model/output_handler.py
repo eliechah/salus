@@ -158,11 +158,6 @@ def handle_semgrep():
         print("[!] Semgrep report not found.")
         return []
 
-    known_threats = {
-        "python.lang.security.deserialization.pickle.avoid-pickle": True,
-        "python.lang.security.audit.subprocess-shell-true.subprocess-shell-true": True,
-    }
-
     with open(SEMGREP_REPORT, "r") as f:
         try:
             data = json.load(f)
@@ -172,20 +167,15 @@ def handle_semgrep():
             threats = []
 
             for item in findings:
-                check_id = item.get("check_id", "")
-                full_path = item.get("path", "")
                 message = item.get("extra", {}).get("message", "").strip()
+                if not message:
+                    continue
 
-                print(f"[DEBUG] Semgrep file path: {full_path}")
-                print(f"[DEBUG] Semgrep rule ID: {check_id}")
-                print(f"[DEBUG] Semgrep message: {message}")
-
-                if message:
-                    verdict = "THREAT ✅" if known_threats.get(check_id, False) else "False Positive ❌"
-                    print(f"  → {verdict} — {message}")
-                    threats.append((verdict, message))
-                else:
-                    print("  → No message provided by Semgrep.")
+                print(f"[DEBUG] Semgrep finding message: {message}")
+                result = is_threat(message)
+                verdict = "THREAT ✅" if result else "False Positive ❌"
+                print(f"  → {verdict} — {message}")
+                threats.append((verdict, message))
 
             if not threats:
                 print("  → No Semgrep threats detected.")
@@ -195,7 +185,6 @@ def handle_semgrep():
             print("[!] Invalid Semgrep JSON.")
             return []
 
-        
 
 # === COMBINED RUN ===
 if __name__ == "__main__":
