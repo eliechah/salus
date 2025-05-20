@@ -68,58 +68,7 @@ def handle_gitleaks():
             return []
 
 
-# === YARA ===
-def handle_yara():
-    print("\n[🔍] YARA Results:")
-    try:
-        from subprocess import run, PIPE
-
-        find_cmd = (
-            f"find {YARA_TARGET_DIR} -type f \\( -name '*.py' -o -name '*.txt' -o -name '*.js' \\) "
-            "! -name 'gitleaks-report.json' ! -name 'semgrep-report.json' "
-            f"-exec yara -r {YARA_RULES_PATH} {{}} +"
-        )
-        
-        print(f"[DEBUG] YARA find command: {find_cmd}")
-
-        print("[DEBUG] Files targeted by YARA:")
-        for root, dirs, files in os.walk(YARA_TARGET_DIR):
-            for file in files:
-                if file.endswith(".py") or file.endswith(".txt") or file.endswith(".js"):
-                    print("  →", os.path.join(root, file))
-
-        
-        result = run(find_cmd, shell=True, stdout=PIPE, stderr=PIPE, text=True)
-        output = result.stdout.strip().splitlines()
-        threats = []
-
-        for line in output:
-            # Output line format: RuleName filename
-            parts = line.strip().split()
-            if len(parts) >= 2:
-                rule_name = parts[0]
-                matched_file = " ".join(parts[1:])  # In case file path has spaces
-
-                # Just grab the first non-empty line for display
-                try:
-                    with open(matched_file, "r") as f:
-                        first_line = next((l.strip() for l in f if l.strip()), "")
-                except Exception as e:
-                    first_line = "[Could not read file]"
-
-                result = is_threat(rule_name)  # Classify using rule name
-                verdict = "THREAT ✅" if result else "False Positive ❌"
-                print(f"  → {verdict} — {rule_name} matched in {matched_file} → {first_line}")
-                threats.append((verdict, rule_name))
-
-        if not threats:
-            print("  → No YARA matches found.")
-        return threats
-
-    except Exception as e:
-        print(f"[!] YARA error: {e}")
-        return []
-
+# === SUMGREP ===
 def run_semgrep():
     print("[⚙️] Running Semgrep...")
 
@@ -184,6 +133,55 @@ def handle_semgrep():
         except json.JSONDecodeError:
             print("[!] Invalid Semgrep JSON.")
             return []
+
+
+# === YARA ===
+def handle_yara():
+    print("\n[🔍] YARA Results:")
+    try:
+        from subprocess import run, PIPE
+
+        find_cmd = "yara -r /rules/test_secrets.yar /app/code/script.py"
+        
+        print(f"[DEBUG] YARA find command: {find_cmd}")
+
+        print("[DEBUG] Files targeted by YARA:")
+        for root, dirs, files in os.walk(YARA_TARGET_DIR):
+            for file in files:
+                if file.endswith(".py") or file.endswith(".txt") or file.endswith(".js"):
+                    print("  →", os.path.join(root, file))
+
+        
+        result = run(find_cmd, shell=True, stdout=PIPE, stderr=PIPE, text=True)
+        output = result.stdout.strip().splitlines()
+        threats = []
+
+        for line in output:
+            # Output line format: RuleName filename
+            parts = line.strip().split()
+            if len(parts) >= 2:
+                rule_name = parts[0]
+                matched_file = " ".join(parts[1:])  # In case file path has spaces
+
+                # Just grab the first non-empty line for display
+                try:
+                    with open(matched_file, "r") as f:
+                        first_line = next((l.strip() for l in f if l.strip()), "")
+                except Exception as e:
+                    first_line = "[Could not read file]"
+
+                result = is_threat(rule_name)  # Classify using rule name
+                verdict = "THREAT ✅" if result else "False Positive ❌"
+                print(f"  → {verdict} — {rule_name} matched in {matched_file} → {first_line}")
+                threats.append((verdict, rule_name))
+
+        if not threats:
+            print("  → No YARA matches found.")
+        return threats
+
+    except Exception as e:
+        print(f"[!] YARA error: {e}")
+        return []
 
 
 # === COMBINED RUN ===
