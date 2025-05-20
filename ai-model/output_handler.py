@@ -201,8 +201,8 @@ if __name__ == "__main__":
 
     report = {
         "gitleaks": handle_gitleaks(),
-        "yara": handle_yara(),
         "semgrep": handle_semgrep(),
+        "yara": handle_yara()
     }
 
     print("\n✅ Unified Threat Report Complete.")

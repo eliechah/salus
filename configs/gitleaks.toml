@@ -1,5 +1,1 @@
-[[rules]]
-description = "Test AWS Key Leak"
-id = "aws-test"
-regex = '''AWS_SECRET_ACCESS_KEY\s*=\s*["']?(AKIA[0-9A-Z]{16})["']?'''
-tags = ["key", "AWS"]
+404: Not Found
