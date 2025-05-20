@@ -10,6 +10,8 @@ YARA_TARGET_DIR = "/app/code"
 YARA_EXCLUDE = ["outputs/gitleaks-report.json", "outputs/semgrep-report.json"]
 YARA_RULES_PATH = "/rules/test_secrets.yar"
 
+os.makedirs("outputs", exist_ok=True)
+
 print("[DEBUG] Files inside /app/code:")
 for root, dirs, files in os.walk("/app/code"):
     for file in files:
