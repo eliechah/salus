@@ -15,7 +15,6 @@ for root, dirs, files in os.walk("/app/code"):
     for file in files:
         print("  →", os.path.join(root, file))
 
-
 # === GITLEAKS ===
 def run_gitleaks():
     print("[⚙️] Running Gitleaks...")
@@ -121,29 +120,34 @@ def handle_yara():
         print(f"[!] YARA error: {e}")
         return []
 
-
 def run_semgrep():
     print("[⚙️] Running Semgrep...")
-    print("[DEBUG] Semgrep scan target contents:")
+
+    # Print what files Semgrep is expected to scan
+    print("[DEBUG] Running Semgrep on /app/code, files to be scanned:")
     for root, dirs, files in os.walk("/app/code"):
         for file in files:
-            if file.endswith((".py", ".js", ".txt")):
+            if file.endswith(".py") or file.endswith(".js") or file.endswith(".txt"):
                 print("  →", os.path.join(root, file))
 
+    # Then run the scan
     from subprocess import run
     cmd = [
         "semgrep", "scan",
         "--config=p/python",
-        "--json",
         "--no-git-ignore",
+        "--json",
         "--output=/app/outputs/semgrep-report.json",
         "/app/code"
     ]
+    
+    with open("/app/code/script.py") as f:
+        print("[DEBUG] Contents of script.py:")
+        print(f.read())
+
     result = run(cmd, capture_output=True, text=True)
-    if result.returncode != 0 and "error" in result.stderr.lower():
+    if result.returncode != 0:
         print(f"[!] Semgrep scan error:\n{result.stderr}")
-    else:
-        print("[DEBUG] Semgrep scan finished.")
 
 
 def handle_semgrep():
@@ -154,6 +158,11 @@ def handle_semgrep():
         print("[!] Semgrep report not found.")
         return []
 
+    known_threats = {
+        "python.lang.security.deserialization.pickle.avoid-pickle": True,
+        "python.lang.security.audit.subprocess-shell-true.subprocess-shell-true": True,
+    }
+
     with open(SEMGREP_REPORT, "r") as f:
         try:
             data = json.load(f)
@@ -163,14 +172,20 @@ def handle_semgrep():
             threats = []
 
             for item in findings:
+                check_id = item.get("check_id", "")
+                full_path = item.get("path", "")
                 message = item.get("extra", {}).get("message", "").strip()
-                if not message:
-                    continue
-                print(f"[DEBUG] Semgrep finding message: {message}")
-                result = is_threat(message)
-                verdict = "THREAT ✅" if result else "False Positive ❌"
-                print(f"  → {verdict} — {message}")
-                threats.append((verdict, message))
+
+                print(f"[DEBUG] Semgrep file path: {full_path}")
+                print(f"[DEBUG] Semgrep rule ID: {check_id}")
+                print(f"[DEBUG] Semgrep message: {message}")
+
+                if message:
+                    verdict = "THREAT ✅" if known_threats.get(check_id, False) else "False Positive ❌"
+                    print(f"  → {verdict} — {message}")
+                    threats.append((verdict, message))
+                else:
+                    print("  → No message provided by Semgrep.")
 
             if not threats:
                 print("  → No Semgrep threats detected.")
@@ -180,6 +195,7 @@ def handle_semgrep():
             print("[!] Invalid Semgrep JSON.")
             return []
 
+        
 
 # === COMBINED RUN ===
 if __name__ == "__main__":
