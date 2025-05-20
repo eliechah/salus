@@ -8,7 +8,7 @@ GITLEAKS_REPORT = "outputs/gitleaks-report.json"
 SEMGREP_REPORT = "outputs/semgrep-report.json"
 YARA_TARGET_DIR = "/app/code"
 YARA_EXCLUDE = ["outputs/gitleaks-report.json", "outputs/semgrep-report.json"]
-YARA_RULES_PATH = "/app/configs/yara_rules/test_secrets.yara"
+YARA_RULES_PATH = "/app/configs/yara_rules/test_secrets.yar"
 
 os.makedirs("outputs", exist_ok=True)
 
