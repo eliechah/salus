@@ -123,26 +123,23 @@ def handle_yara():
 
 
 def run_semgrep():
-    print("[⚙️] Running Semgrep...")
-    print("[DEBUG] Semgrep scan target contents:")
-    for root, dirs, files in os.walk("/app/code"):
-        for file in files:
-            if file.endswith((".py", ".js", ".txt")):
-                print("  →", os.path.join(root, file))
-
+    print("[⚙️] Running Semgrep... (hardcoded test)")
+    
     from subprocess import run
     cmd = [
         "semgrep", "scan",
         "--config=p/python",
         "--json",
         "--output=/app/outputs/semgrep-report.json",
-        "/app/code"
+        "/app/code/script.py"
     ]
+    print(f"[DEBUG] Running command: {' '.join(cmd)}")
     result = run(cmd, capture_output=True, text=True)
     if result.returncode != 0 and "error" in result.stderr.lower():
         print(f"[!] Semgrep scan error:\n{result.stderr}")
     else:
         print("[DEBUG] Semgrep scan finished.")
+
 
 
 def handle_semgrep():
