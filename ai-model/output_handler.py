@@ -136,7 +136,7 @@ def run_semgrep():
         "semgrep", "scan",
         "--verbose",
         "--config=p/ci",
-        "--include", "*.py",
+        "--metrics=metrics.json",
         "--json",
         "--output=/app/outputs/semgrep-report.json",
         "/app/code"
