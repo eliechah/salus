@@ -143,7 +143,10 @@ def handle_yara():
     try:
         from subprocess import run, PIPE
 
-        find_cmd = f"yara -r {YARA_RULES_PATH} /app/code/script.py"
+        find_cmd = (
+            f"find {YARA_TARGET_DIR} -type f \\( -name '*.py' -o -name '*.txt' -o -name '*.js' \\) "
+            f"-exec yara -r {YARA_RULES_PATH} {{}} +"
+        )
         
         print(f"[DEBUG] YARA find command: {find_cmd}")
 
