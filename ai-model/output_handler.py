@@ -134,9 +134,7 @@ def run_semgrep():
     from subprocess import run
     cmd = [
         "semgrep", "scan",
-        "--config=p/ci",
-        "--metrics=on",
-        "--debug",
+        "--config=p/python",
         "--json",
         "--output=/app/outputs/semgrep-report.json",
         "/app/code"
