@@ -4,7 +4,7 @@ services:
       context: ./ai-model
     container_name: ai_model
     volumes:
-      - ./target_repo:/app/code         # ✅ User's code to scan
-      - ./outputs:/app/outputs          # ✅ Reports directory
-      - ./configs:/app/configs          # ✅ YARA rules, Gitleaks config, etc.
+      - .:/app/code
+      - ./outputs:/app/outputs
+      - ./configs:/app/configs
     tty: true                           # Optional: allows manual debugging
