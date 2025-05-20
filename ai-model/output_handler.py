@@ -12,18 +12,10 @@ YARA_RULES_PATH = "/app/configs/yara_rules/test_secrets.yar"
 
 os.makedirs("outputs", exist_ok=True)
 
-print("[DEBUG] Files inside /app/code:")
-for root, dirs, files in os.walk("/app/code"):
-    for file in files:
-        print("  →", os.path.join(root, file))
 
 # === GITLEAKS ===
 def run_gitleaks():
     print("[⚙️] Running Gitleaks...")
-    print("[DEBUG] Gitleaks scan target contents:")
-    for root, dirs, files in os.walk("/app/code"):
-        for file in files:
-            print("  →", os.path.join(root, file))
 
     from subprocess import run
     cmd = [
@@ -73,13 +65,6 @@ def handle_gitleaks():
 # === SUMGREP ===
 def run_semgrep():
     print("[⚙️] Running Semgrep...")
-
-    # Print what files Semgrep is expected to scan
-    print("[DEBUG] Running Semgrep on /app/code, files to be scanned:")
-    for root, dirs, files in os.walk("/app/code"):
-        for file in files:
-            if file.endswith(".py") or file.endswith(".js") or file.endswith(".txt"):
-                print("  →", os.path.join(root, file))
 
     # Then run the scan
     from subprocess import run
@@ -145,17 +130,10 @@ def handle_yara():
 
         find_cmd = (
             f"find {YARA_TARGET_DIR} -type f \\( -name '*.py' -o -name '*.txt' -o -name '*.js' \\) "
-            f"-exec yara -r {YARA_RULES_PATH} {{}} +"
+            f"-exec yara {YARA_RULES_PATH} {{}} \\;"
         )
         
         print(f"[DEBUG] YARA find command: {find_cmd}")
-
-        print("[DEBUG] Files targeted by YARA:")
-        for root, dirs, files in os.walk(YARA_TARGET_DIR):
-            for file in files:
-                if file.endswith(".py") or file.endswith(".txt") or file.endswith(".js"):
-                    print("  →", os.path.join(root, file))
-
         
         result = run(find_cmd, shell=True, stdout=PIPE, stderr=PIPE, text=True)
         output = result.stdout.strip().splitlines()
@@ -204,3 +182,11 @@ if __name__ == "__main__":
 
     print("\n✅ Unified Threat Report Complete.")
 
+    # Count total threats
+    total_threats = sum(1 for tool_results in report.values() for verdict, _ in tool_results if "THREAT" in verdict)
+
+    if total_threats > 0:
+        print(f"\n❌ Detected {total_threats} threat(s). Failing the pipeline.")
+        exit(1)
+    else:
+        print("\n✅ No threats detected. Proceeding safely.")
