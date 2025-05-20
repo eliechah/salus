@@ -129,9 +129,10 @@ def run_semgrep():
     cmd = [
         "semgrep", "scan",
         "--config=p/python",
+        "--no-git-ignore",
         "--json",
         "--output=/app/outputs/semgrep-report.json",
-        "/app/code/script.py"
+        "/app/code"
     ]
     print(f"[DEBUG] Running command: {' '.join(cmd)}")
     result = run(cmd, capture_output=True, text=True)
@@ -139,7 +140,6 @@ def run_semgrep():
         print(f"[!] Semgrep scan error:\n{result.stderr}")
     else:
         print("[DEBUG] Semgrep scan finished.")
-
 
 
 def handle_semgrep():
