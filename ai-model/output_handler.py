@@ -140,6 +140,10 @@ def run_semgrep():
         "--output=/app/outputs/semgrep-report.json",
         "/app/code"
     ]
+    
+    with open("/app/code/script.py") as f:
+        print("[DEBUG] Contents of script.py:")
+        print(f.read())
 
     result = run(cmd, capture_output=True, text=True)
     if result.returncode != 0:
