@@ -10,9 +10,19 @@ YARA_TARGET_DIR = "/app/code"
 YARA_EXCLUDE = ["outputs/gitleaks-report.json", "outputs/semgrep-report.json"]
 YARA_RULES_PATH = "/rules/test_secrets.yar"
 
+print("[DEBUG] Files inside /app/code:")
+for root, dirs, files in os.walk("/app/code"):
+    for file in files:
+        print("  →", os.path.join(root, file))
+
 # === GITLEAKS ===
 def run_gitleaks():
     print("[⚙️] Running Gitleaks...")
+    print("[DEBUG] Gitleaks scan target contents:")
+    for root, dirs, files in os.walk("/app/code"):
+        for file in files:
+            print("  →", os.path.join(root, file))
+
     from subprocess import run
     cmd = [
         "gitleaks", "detect",
@@ -69,7 +79,16 @@ def handle_yara():
             "! -name 'gitleaks-report.json' ! -name 'semgrep-report.json' "
             f"-exec yara -r {YARA_RULES_PATH} {{}} +"
         )
+        
+        print(f"[DEBUG] YARA find command: {find_cmd}")
 
+        print("[DEBUG] Files targeted by YARA:")
+        for root, dirs, files in os.walk(YARA_TARGET_DIR):
+            for file in files:
+                if file.endswith(".py") or file.endswith(".txt") or file.endswith(".js"):
+                    print("  →", os.path.join(root, file))
+
+        
         result = run(find_cmd, shell=True, stdout=PIPE, stderr=PIPE, text=True)
         output = result.stdout.strip().splitlines()
         threats = []
@@ -101,10 +120,17 @@ def handle_yara():
         print(f"[!] YARA error: {e}")
         return []
 
-
-# === SEMGREP ===
 def run_semgrep():
     print("[⚙️] Running Semgrep...")
+
+    # Print what files Semgrep is expected to scan
+    print("[DEBUG] Running Semgrep on /app/code, files to be scanned:")
+    for root, dirs, files in os.walk("/app/code"):
+        for file in files:
+            if file.endswith(".py") or file.endswith(".js") or file.endswith(".txt"):
+                print("  →", os.path.join(root, file))
+
+    # Then run the scan
     from subprocess import run
     cmd = [
         "semgrep", "scan",
@@ -116,6 +142,7 @@ def run_semgrep():
     result = run(cmd, capture_output=True, text=True)
     if result.returncode != 0:
         print(f"[!] Semgrep scan error:\n{result.stderr}")
+
 
 
 def handle_semgrep():
