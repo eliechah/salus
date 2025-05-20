@@ -14,15 +14,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Prepare output folder
+        run: mkdir -p outputs
+
       - name: List contents of /app/code and outputs
         run: |
           echo "===== CODE FILES ====="
           find ${{ github.workspace }} -type f
           echo "===== OUTPUT FILES ====="
           ls -al ${{ github.workspace }}/outputs
-
-      - name: Prepare output folder
-        run: mkdir -p outputs
 
       - name: Run Git Security Tool (Gitleaks + Semgrep + YARA)
         run: |
