@@ -143,7 +143,7 @@ def handle_yara():
     try:
         from subprocess import run, PIPE
 
-        find_cmd = "yara -r /rules/test_secrets.yar /app/code/script.py"
+        find_cmd = f"yara -r {YARA_RULES_PATH} /app/code/script.py"
         
         print(f"[DEBUG] YARA find command: {find_cmd}")
 
