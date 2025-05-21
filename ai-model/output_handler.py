@@ -41,7 +41,6 @@ def handle_gitleaks():
     with open(GITLEAKS_REPORT, "r") as f:
         try:
             findings = json.load(f)
-            print(f"[DEBUG] Raw Gitleaks JSON: {findings}")
 
             threats = []
             for item in findings:
@@ -93,7 +92,6 @@ def handle_semgrep():
     with open(SEMGREP_REPORT, "r") as f:
         try:
             data = json.load(f)
-            print("[DEBUG] Raw Semgrep JSON:", data)
 
             findings = data.get("results", [])
             threats = []
