@@ -116,7 +116,7 @@ def handle_semgrep():
             return []
 
 
-# === YARA === 
+# === YARA ===
 def handle_yara():
     print("\n[🔍] YARA Results:")
     try:
@@ -125,7 +125,7 @@ def handle_yara():
         find_cmd = (
             f"find {YARA_TARGET_DIR} -type f "
             f"\\( -name '*.py' -o -name '*.txt' -o -name '*.js' \\) "
-            f"! -name '/app/ai-model/ai_filter.py' "
+            f"! -name 'ai_filter.py' "
             f"-exec yara {YARA_RULES_PATH} {{}} \\;"
         )
         
