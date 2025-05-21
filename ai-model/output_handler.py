@@ -116,7 +116,7 @@ def handle_semgrep():
             return []
 
 
-# === YARA ===
+# === YARA === 
 def handle_yara():
     print("\n[🔍] YARA Results:")
     try:
