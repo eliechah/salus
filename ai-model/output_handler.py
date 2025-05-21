@@ -11,7 +11,7 @@ YARA_EXCLUDE = ["outputs/gitleaks-report.json", "outputs/semgrep-report.json"]
 YARA_RULES_PATH = "/app/configs/yara_rules/test_secrets.yar"
 
 os.makedirs("outputs", exist_ok=True)
-
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3" # Suppress INFO and WARNING messages
 
 # === GITLEAKS ===
 def run_gitleaks():
@@ -32,7 +32,7 @@ def run_gitleaks():
 
 def handle_gitleaks():
     print("\n[🔍] Gitleaks Results:")
-    print(f"[DEBUG] Checking if Gitleaks report exists at {GITLEAKS_REPORT}: {os.path.exists(GITLEAKS_REPORT)}")
+    # print(f"[DEBUG] Checking if Gitleaks report exists at {GITLEAKS_REPORT}: {os.path.exists(GITLEAKS_REPORT)}")
 
     if not os.path.exists(GITLEAKS_REPORT):
         print("[!] Gitleaks report not found.")
@@ -83,7 +83,7 @@ def run_semgrep():
 
 def handle_semgrep():
     print("\n[🔍] Semgrep Results:")
-    print(f"[DEBUG] Checking if Semgrep report exists at {SEMGREP_REPORT}: {os.path.exists(SEMGREP_REPORT)}")
+    # print(f"[DEBUG] Checking if Semgrep report exists at {SEMGREP_REPORT}: {os.path.exists(SEMGREP_REPORT)}")
 
     if not os.path.exists(SEMGREP_REPORT):
         print("[!] Semgrep report not found.")
@@ -128,8 +128,6 @@ def handle_yara():
             f"! -name 'ai_filter.py' "
             f"-exec yara {YARA_RULES_PATH} {{}} \\;"
         )
-        
-        print(f"[DEBUG] YARA find command: {find_cmd}")
         
         result = run(find_cmd, shell=True, stdout=PIPE, stderr=PIPE, text=True)
         output = result.stdout.strip().splitlines()
