@@ -17,13 +17,6 @@ jobs:
       - name: Prepare output folder
         run: mkdir -p outputs
 
-      - name: List contents of /app/code and outputs
-        run: |
-          echo "===== CODE FILES ====="
-          find ${{ github.workspace }} -type f
-          echo "===== OUTPUT FILES ====="
-          ls -al ${{ github.workspace }}/outputs
-
       - name: Run Git Security Tool (Gitleaks + Semgrep + YARA)
         run: |
           docker run --rm \
