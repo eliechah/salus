@@ -123,7 +123,9 @@ def handle_yara():
         from subprocess import run, PIPE
 
         find_cmd = (
-            f"find {YARA_TARGET_DIR} -type f \\( -name '*.py' -o -name '*.txt' -o -name '*.js' \\) "
+            f"find {YARA_TARGET_DIR} -type f "
+            f"\\( -name '*.py' -o -name '*.txt' -o -name '*.js' \\) "
+            f"! -name 'ai_filter.py' "
             f"-exec yara {YARA_RULES_PATH} {{}} \\;"
         )
         

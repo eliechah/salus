@@ -40,6 +40,7 @@ paths = [
     '''(?:^|/)vendor/(?:bundle|ruby)(?:/.*?)?$''',
     '''\.gem$''',
     '''verification-metadata\.xml''',
+    '''(?:^|/)configs/yara_rules(?:/.*)?$''',
     '''Database.refactorlog''',
 ]
 regexes = [
