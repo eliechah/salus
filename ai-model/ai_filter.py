@@ -1,4 +1,8 @@
 # ai_filter.py
+import os
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"     # Suppress TF INFO & WARN
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"    # Disable GPU / cuDNN logs
+
 import tensorflow as tf # type: ignore
 from tensorflow.keras.preprocessing.sequence import pad_sequences # type: ignore
 import pickle
