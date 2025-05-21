@@ -1,6 +1,6 @@
 import json
 import os
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"  # 0 = all, 1 = filter INFO, 2 = filter WARNING
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"  # 0 = all, 1 = filter INFO, 2 = filter WARNING
 from ai_filter import is_threat
 
 # === Paths ===
@@ -11,7 +11,6 @@ YARA_EXCLUDE = ["outputs/gitleaks-report.json", "outputs/semgrep-report.json"]
 YARA_RULES_PATH = "/app/configs/yara_rules/test_secrets.yar"
 
 os.makedirs("outputs", exist_ok=True)
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3" # Suppress INFO and WARNING messages
 
 # === GITLEAKS ===
 def run_gitleaks():
