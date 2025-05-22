@@ -1,5 +1,6 @@
 services:
   ai_model:
+    image: eliechxh/git-salus-scanner
     build:
       context: ./ai-model
     container_name: ai_model
@@ -7,4 +8,4 @@ services:
       - .:/app/code
       - ./outputs:/app/outputs
       - ./configs:/app/configs
-    tty: true                           # Optional: allows manual debugging
+    tty: true
