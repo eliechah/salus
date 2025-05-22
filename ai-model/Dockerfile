@@ -21,5 +21,8 @@ RUN pip install tensorflow scikit-learn
 # Copy only the required files
 COPY ai_filter.py kdnn_model.keras tokenizer.pkl output_handler.py /app/
 
+ENV TF_CPP_MIN_LOG_LEVEL=3
+ENV CUDA_VISIBLE_DEVICES=-1
+
 # Set the default command to run your unified AI scanner
 CMD ["python3", "output_handler.py"]
