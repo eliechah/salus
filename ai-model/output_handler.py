@@ -30,7 +30,6 @@ def run_gitleaks():
 
 def handle_gitleaks():
     print("\n[🔍] Gitleaks Results:")
-    # print(f"[DEBUG] Checking if Gitleaks report exists at {GITLEAKS_REPORT}: {os.path.exists(GITLEAKS_REPORT)}")
 
     if not os.path.exists(GITLEAKS_REPORT):
         print("[!] Gitleaks report not found.")
@@ -63,7 +62,6 @@ def handle_gitleaks():
 def run_semgrep():
     print("[⚙️] Running Semgrep...")
 
-    # Then run the scan
     from subprocess import run
     cmd = [
         "semgrep", "scan",
@@ -81,7 +79,6 @@ def run_semgrep():
 
 def handle_semgrep():
     print("\n[🔍] Semgrep Results:")
-    # print(f"[DEBUG] Checking if Semgrep report exists at {SEMGREP_REPORT}: {os.path.exists(SEMGREP_REPORT)}")
 
     if not os.path.exists(SEMGREP_REPORT):
         print("[!] Semgrep report not found.")
@@ -132,20 +129,18 @@ def handle_yara():
         threats = []
 
         for line in output:
-            # Output line format: RuleName filename
             parts = line.strip().split()
             if len(parts) >= 2:
                 rule_name = parts[0]
-                matched_file = " ".join(parts[1:])  # In case file path has spaces
+                matched_file = " ".join(parts[1:])
 
-                # Just grab the first non-empty line for display
                 try:
                     with open(matched_file, "r") as f:
                         first_line = next((l.strip() for l in f if l.strip()), "")
                 except Exception as e:
                     first_line = "[Could not read file]"
 
-                result = is_threat(rule_name)  # Classify using rule name
+                result = is_threat(rule_name)
                 verdict = "THREAT ✅" if result else "False Positive ❌"
                 print(f"  → {verdict} — {rule_name} matched in {matched_file} → {first_line}")
                 threats.append((verdict, rule_name))
