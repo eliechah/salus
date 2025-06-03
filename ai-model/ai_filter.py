@@ -17,3 +17,4 @@ def is_threat(code_snippet: str) -> bool:
     padded = pad_sequences(sequence, maxlen=MAX_LEN, padding='post', truncating='post')
     prediction = model.predict(padded, verbose=0)[0][0]
     return prediction >= 0.4
+
